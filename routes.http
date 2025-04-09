@@ -1,0 +1,7 @@
+###
+POST https://www.crecisc.conselho.net.br/form_pesquisa_cadastro_geral_site.php
+Content-Type: application/json
+
+{
+    "cidade": "Imbituba"
+}
