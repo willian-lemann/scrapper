@@ -16,12 +16,12 @@ import (
 func getLinks() []string {
 	var links []string
 
-	for i := 1; i <= 3; i++ {
+	for i := 1; i <= 2; i++ {
 		link := "https://imobiliariajefersonealba.com.br/alugueis/pesquisa/todos/imbituba/todos/todos/"
 		links = append(links, fmt.Sprintf("%s%d", link, i))
 	}
 
-	for i := 1; i <= 5; i++ {
+	for i := 1; i <= 21; i++ {
 		link := "https://imobiliariajefersonealba.com.br/vendas/pesquisa/apartamento/imbituba/todos/todos/"
 		links = append(links, fmt.Sprintf("%s%d", link, i))
 	}

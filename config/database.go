@@ -10,6 +10,8 @@ import (
 	"github.com/nedpals/supabase-go"
 )
 
+var supabaseClient *supabase.Client = nil
+
 func DatabaseConfig() (*pgx.Conn, error) {
 	err := godotenv.Load()
 	if err != nil {
@@ -33,6 +35,10 @@ func GetSupabaseClient() *supabase.Client {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file %s", err)
+	}
+
+	if supabaseClient != nil {
+		return supabaseClient
 	}
 
 	supabaseURL := os.Getenv("SUPABASE_URL")

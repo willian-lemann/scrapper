@@ -27,5 +27,5 @@ func TruncateTable(table string) {
 
 	db.Close(context.Background())
 
-	fmt.Printf("Scrapped listings truncated!\n")
+	fmt.Printf("%s truncated.\n", table)
 }

@@ -13,13 +13,12 @@ func main() {
 	utils.TruncateTable("scrapped_listings")
 
 	var scraperWG sync.WaitGroup
-	scraperWG.Add(3)
+	scraperWG.Add(1)
 
 	start := time.Now()
 
 	go scrappers.ExecuteJefersonAlba(&scraperWG)
-	go scrappers.CasaImoveisExecute(&scraperWG)
-	go scrappers.ExecuteAuxPredial(&scraperWG)
+	scrappers.ExecuteAuxPredial()
 
 	scraperWG.Wait()
 

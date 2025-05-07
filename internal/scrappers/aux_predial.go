@@ -20,8 +20,7 @@ func checkListing(listing structs.ListingItem) bool {
 	}
 	if strings.Contains(listing.Type, "Galpão") ||
 		strings.Contains(listing.Type, "Mônaco") ||
-		strings.Contains(listing.Type, "Sobrado") ||
-		strings.Contains(listing.Type, "Terreno") {
+		strings.Contains(listing.Type, "Sobrado") {
 		return false
 	}
 
@@ -33,7 +32,7 @@ func getNavLinks() []string {
 
 	var links []string
 
-	quantityOfPages := 19
+	quantityOfPages := 28
 	for i := 1; i <= quantityOfPages; i++ {
 		newLink := fmt.Sprintf("%spage=%d", mainLink, i)
 		links = append(links, newLink)
@@ -181,8 +180,7 @@ func scrapeWorker(link string, ch chan structs.ListingItem, w *sync.WaitGroup) {
 	}
 }
 
-func ExecuteAuxPredial(wg *sync.WaitGroup) {
-	defer wg.Done()
+func ExecuteAuxPredial() {
 
 	fmt.Println("Starting scrapping aux_predial")
 
