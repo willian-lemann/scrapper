@@ -15,12 +15,12 @@ import (
 )
 
 func checkListing(listing structs.ListingItem) bool {
-	if strings.Trim(listing.Type, " ") == "" {
+
+	if len(strings.Trim(listing.Type, " ")) == 0 {
 		return false
 	}
 	if strings.Contains(listing.Type, "Galpão") ||
-		strings.Contains(listing.Type, "Mônaco") ||
-		strings.Contains(listing.Type, "Sobrado") {
+		strings.Contains(listing.Type, "Mônaco") {
 		return false
 	}
 
@@ -47,21 +47,23 @@ func initScrape(visitLink string) []structs.ListingItem {
 	listings := []structs.ListingItem{}
 
 	c.OnHTML("#contentSide > div.MuiBox-root.css-164mavz > div > div.sc-a7b1d3df-0.cwVfwz", func(h *colly.HTMLElement) {
-		h.ForEach("div div.content", func(_ int, h *colly.HTMLElement) {
-			ref := strings.Replace(h.ChildText("div.footer div.ref span"), "ref: ", "", -1)
+
+		h.ForEach("div.sc-9a1315a7-0.fddfVh", func(_ int, h *colly.HTMLElement) {
+			ref := strings.Replace(h.ChildText("div.card-imovel-footer div.ref span"), "ref: ", "", -1)
 			link := fmt.Sprintf("https://www.auxiliadorapredial.com.br/imovel/venda/%s", ref)
+			fmt.Println("link:", link)
 			id, _ := strconv.Atoi(ref)
-			address := h.ChildText("div.Location span")
-			priceValue := strings.Trim(h.ChildText("div.content div.headContent div.total div div.oldValue"), " ")
+			address := h.ChildText("a.content div.Location span")
+			priceValue := strings.Trim(h.ChildText("a.content div.headContent div.total div div.oldValue"), " ")
 			price := strings.Replace(priceValue, "R$", "", -1)
-			listingType := h.ChildText("div.content div.headContent h4")
+			listingType := h.ChildText("a.content div.headContent h4")
 			bedrooms := 0
 			bathrooms := 0
 			parking := 0
 			area := ""
 			forSale := true
 
-			h.ForEach("div.Details", func(i int, h *colly.HTMLElement) {
+			h.ForEach("a.content div.Details", func(i int, h *colly.HTMLElement) {
 				h.ForEach("div", func(i int, h *colly.HTMLElement) {
 					alt := h.ChildAttr("img", "alt")
 					value := h.ChildText("span")
@@ -170,8 +172,11 @@ func scrapeWorker(link string, ch chan structs.ListingItem, w *sync.WaitGroup) {
 
 	listings := initScrape(link)
 
+	fmt.Println("listings:", len(listings))
+
 	for _, listing := range listings {
 		newListing := insidePageScrape(listing)
+
 		if len(newListing.Photos) == 0 {
 			continue
 		}
@@ -180,7 +185,8 @@ func scrapeWorker(link string, ch chan structs.ListingItem, w *sync.WaitGroup) {
 	}
 }
 
-func ExecuteAuxPredial() {
+func ExecuteAuxPredial(wg *sync.WaitGroup) {
+	defer wg.Done()
 
 	fmt.Println("Starting scrapping aux_predial")
 
@@ -202,6 +208,7 @@ func ExecuteAuxPredial() {
 
 	for listing := range resultch {
 		err := repositories.Create(&listing, "scrapped_listings")
+		fmt.Println("error:", err)
 		if err != nil {
 			continue
 		}
