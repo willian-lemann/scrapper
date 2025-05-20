@@ -1,7 +1,7 @@
 package structs
 
 type ListingItem struct {
-	Id               int      `json:"id"`
+	Id               int      `json:"id,omitempty"`
 	Link             string   `json:"link"`
 	Image            string   `json:"image"`
 	Address          string   `json:"address"`
@@ -42,5 +42,25 @@ func NewListingItem(listing ListingItem) *ListingItem {
 		Agency:           listing.Agency,
 		PlaceholderImage: listing.PlaceholderImage,
 		Ref:              listing.Ref,
+	}
+}
+
+func (l *ListingItem) CreateListingWithEmptyId(listing ListingItem) ListingItem {
+	return ListingItem{
+		Link:             listing.Link,
+		Ref:              listing.Ref,
+		Image:            listing.Image,
+		Address:          listing.Address,
+		Price:            listing.Price,
+		Area:             listing.Area,
+		Bedrooms:         listing.Bedrooms,
+		Bathrooms:        listing.Bathrooms,
+		Type:             listing.Type,
+		ForSale:          listing.ForSale,
+		Parking:          listing.Parking,
+		Content:          listing.Content,
+		Photos:           listing.Photos,
+		Agency:           listing.Agency,
+		PlaceholderImage: listing.PlaceholderImage,
 	}
 }

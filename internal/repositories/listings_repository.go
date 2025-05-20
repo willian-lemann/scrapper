@@ -48,7 +48,7 @@ func Create(listing *structs.ListingItem, table string) error {
 
 	var results []structs.ListingItem
 
-	err := supabase.DB.From(table).Insert(listing).Execute(&results)
+	err := supabase.DB.From(table).Upsert(listing).Execute(&results)
 	if err != nil {
 		return err
 	}

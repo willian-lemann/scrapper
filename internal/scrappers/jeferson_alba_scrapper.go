@@ -21,7 +21,7 @@ func getLinks() []string {
 		links = append(links, fmt.Sprintf("%s%d", link, i))
 	}
 
-	for i := 1; i <= 21; i++ {
+	for i := 1; i <= 5; i++ {
 		link := "https://imobiliariajefersonealba.com.br/vendas/pesquisa/apartamento/imbituba/todos/todos/"
 		links = append(links, fmt.Sprintf("%s%d", link, i))
 	}
@@ -133,10 +133,12 @@ func worker(link string, ch chan structs.ListingItem, w *sync.WaitGroup) {
 
 	for _, listing := range listings {
 		newListing := getListingItem(listing)
+
 		if len(newListing.Photos) == 0 {
 			continue
 		}
-		ch <- newListing
+
+		ch <- newListing.CreateListingWithEmptyId(newListing)
 	}
 }
 

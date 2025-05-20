@@ -51,7 +51,6 @@ func initScrape(visitLink string) []structs.ListingItem {
 		h.ForEach("div.sc-9a1315a7-0.fddfVh", func(_ int, h *colly.HTMLElement) {
 			ref := strings.Replace(h.ChildText("div.card-imovel-footer div.ref span"), "ref: ", "", -1)
 			link := fmt.Sprintf("https://www.auxiliadorapredial.com.br/imovel/venda/%s", ref)
-			fmt.Println("link:", link)
 			id, _ := strconv.Atoi(ref)
 			address := h.ChildText("a.content div.Location span")
 			priceValue := strings.Trim(h.ChildText("a.content div.headContent div.total div div.oldValue"), " ")
@@ -172,8 +171,6 @@ func scrapeWorker(link string, ch chan structs.ListingItem, w *sync.WaitGroup) {
 
 	listings := initScrape(link)
 
-	fmt.Println("listings:", len(listings))
-
 	for _, listing := range listings {
 		newListing := insidePageScrape(listing)
 
@@ -181,7 +178,7 @@ func scrapeWorker(link string, ch chan structs.ListingItem, w *sync.WaitGroup) {
 			continue
 		}
 		newListing.Image = newListing.Photos[0].Href
-		ch <- newListing
+		ch <- newListing.CreateListingWithEmptyId(newListing)
 	}
 }
 
@@ -208,7 +205,6 @@ func ExecuteAuxPredial(wg *sync.WaitGroup) {
 
 	for listing := range resultch {
 		err := repositories.Create(&listing, "scrapped_listings")
-		fmt.Println("error:", err)
 		if err != nil {
 			continue
 		}
