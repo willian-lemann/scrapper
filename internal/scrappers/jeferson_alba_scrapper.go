@@ -21,8 +21,8 @@ func getLinks() []string {
 		links = append(links, fmt.Sprintf("%s%d", link, i))
 	}
 
-	for i := 1; i <= 5; i++ {
-		link := "https://imobiliariajefersonealba.com.br/vendas/pesquisa/apartamento/imbituba/todos/todos/"
+	for i := 1; i <= 20; i++ {
+		link := "https://imobiliariajefersonealba.com.br/vendas/pesquisa/todos/imbituba/todos/todos/"
 		links = append(links, fmt.Sprintf("%s%d", link, i))
 	}
 

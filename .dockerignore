@@ -1,0 +1,10 @@
+*.exe
+*.test
+*.prof
+*.gcda
+*.gcno
+dist
+build
+.DS_Store
+Thumbs.db
+.idea
