@@ -38,7 +38,11 @@ func getListingItems(linkToVisit string) []structs.ListingItem {
 		id, _ := strconv.Atoi(utils.GetIDFromLink(link))
 		image := h.ChildAttr("div.box-content div.box-imovel-image img", "src")
 		forSale := h.ChildText("div.box-content div.box-imovel-infos div.box-imovel-tag span") == "Venda"
-		price := strings.Split(h.ChildText("div.box-content div.box-imovel-infos span.--price"), " ")[1]
+
+		priceValue := strings.Split(h.ChildText("div.box-content div.box-imovel-infos span.--price"), " ")[1]
+
+		price := structs.FormatPrice(priceValue)
+
 		listingType := h.ChildText("div.box-content div.box-imovel-infos span.--type")
 		address := h.ChildText("div.box-content div.box-imovel-infos span.--location")
 		area := ""

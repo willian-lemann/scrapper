@@ -1,11 +1,16 @@
 package structs
 
+import (
+	"strconv"
+	"strings"
+)
+
 type ListingItem struct {
 	Id               int      `json:"id,omitempty"`
 	Link             string   `json:"link"`
 	Image            string   `json:"image"`
 	Address          string   `json:"address"`
-	Price            string   `json:"price"`
+	Price            int      `json:"price"`
 	Area             string   `json:"area"`
 	Bedrooms         int      `json:"bedrooms"`
 	Bathrooms        int      `json:"bathrooms"`
@@ -51,7 +56,7 @@ func (l *ListingItem) CreateListingWithEmptyId(listing ListingItem) ListingItem 
 		Ref:              listing.Ref,
 		Image:            listing.Image,
 		Address:          listing.Address,
-		Price:            listing.Price,
+		Price:            listing.Price * 100,
 		Area:             listing.Area,
 		Bedrooms:         listing.Bedrooms,
 		Bathrooms:        listing.Bathrooms,
@@ -63,4 +68,18 @@ func (l *ListingItem) CreateListingWithEmptyId(listing ListingItem) ListingItem 
 		Agency:           listing.Agency,
 		PlaceholderImage: listing.PlaceholderImage,
 	}
+}
+
+func FormatPrice(value string) int {
+	priceValue := value
+	priceValue = strings.Replace(priceValue, "R$", "", -1)
+	priceValue = strings.TrimSpace(priceValue)
+	priceValue = strings.Replace(priceValue, ".", "", -1)  // remove thousands separator
+	priceValue = strings.Replace(priceValue, ",", ".", -1) // convert decimal comma to dot
+
+	priceFloat, err := strconv.ParseFloat(priceValue, 64)
+	if err != nil {
+		return 0
+	}
+	return int(priceFloat * 100)
 }
