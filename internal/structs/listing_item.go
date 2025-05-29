@@ -81,5 +81,5 @@ func FormatPrice(value string) int {
 	if err != nil {
 		return 0
 	}
-	return int(priceFloat * 100)
+	return int(priceFloat) / 100
 }
